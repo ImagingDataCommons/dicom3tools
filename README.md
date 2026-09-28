@@ -69,4 +69,20 @@ To download pre-built macOS binaries:
 
 ## Default Configuration
 
-**Note**: The default UID root is set to `0.0.0.0` in the build configuration. This is a placeholder value that should be replaced with organization-specific UIDs in production deployments. The `0.0.0.0` UID is used as a default when no specific UID root is configured. For production use, it is recommended to configure proper DICOM UIDs according to your organization's registered UID root from the ISO/IEC registration authority.
+The upstream build configuration (`config/site.p-def`) defaults every UID to the placeholder `0.0.0.0`, which makes the generated DICOM objects invalid. The packages built here use UIDs under the QIICR root `1.3.6.1.4.1.43046.3`, following the conventions of [dcmqi](https://github.com/QIICR/dcmqi/blob/master/include/dcmqi/QIICRUIDs.h):
+
+| Setting | Value | dcmqi counterpart |
+|---|---|---|
+| `DefaultUIDRoot` (prefix of every generated UID) | `1.3.6.1.4.1.43046.3.1.5` | instance UID root `….1.4` |
+| `DefaultImplementationClassUID` | `1.3.6.1.4.1.43046.3.0.2` | implementation class UID `….0.1` |
+| `DefaultInstanceCreatorUID` | `1.3.6.1.4.1.43046.3.0.3` | none |
+
+These are passed as `-D` options to `imake` in the build workflows rather than written into `config/site.p-def`, so the daily upstream sync cannot overwrite them. To build with the same UIDs locally:
+
+```
+./Configure
+imake -I./config -DInstallInTopDir -DDefaultUIDRoot=1.3.6.1.4.1.43046.3.1.5 -DDefaultImplementationClassUID=1.3.6.1.4.1.43046.3.0.2 -DDefaultInstanceCreatorUID=1.3.6.1.4.1.43046.3.0.3
+make World
+```
+
+Generated UIDs end in `.<time>.<pid>.<hostid>` unless `-stamp` is given; on some Linux hosts this can exceed the 64 character limit (see [#23](https://github.com/ImagingDataCommons/dicom3tools/issues/23)).
