@@ -59,8 +59,13 @@ jobs:
       # No -DDefineBinaryIOFlags here: Cygwin mounts are binary by default, so
       # the default (text-mode) stream opens are already correct. A native
       # MinGW/MSVC build would need that flag or it would corrupt pixel data.
+      #
+      # UIDs are built under the QIICR root (1.3.6.1.4.1.43046.3, as in dcmqi's
+      # QIICRUIDs.h) instead of the 0.0.0.0 placeholder in config/site.p-def.
+      # .1.5 sits next to dcmqi's .1.4 instance root, .0.2/.0.3 next to its .0.1
+      # implementation class UID. Passed here so the upstream sync can't undo it.
       - name: Run imake
-        run: imake -I./config -DInstallInTopDir
+        run: imake -I./config -DInstallInTopDir -DDefaultUIDRoot=1.3.6.1.4.1.43046.3.1.5 -DDefaultImplementationClassUID=1.3.6.1.4.1.43046.3.0.2 -DDefaultInstanceCreatorUID=1.3.6.1.4.1.43046.3.0.3
 
       - name: Build
         # The awk scripts that generate the dconvert headers write their
@@ -104,6 +109,16 @@ jobs:
               exit 1
           fi
           echo "✓ all required programs present"
+
+          # The UIDs passed to imake must reach the compiled code: a misspelt
+          # -D name is silently ignored and leaves the 0.0.0.0 placeholder.
+          for uid in 1.3.6.1.4.1.43046.3.1.5 1.3.6.1.4.1.43046.3.0.2 1.3.6.1.4.1.43046.3.0.3; do
+              if ! grep -q -a -F "$uid" "bin/$PLATFORM_DIR"/*; then
+                  echo "✗ $uid not found in any built program"
+                  exit 1
+              fi
+          done
+          echo "✓ QIICR UIDs compiled in"
 
       - name: Bundle Cygwin runtime DLLs
         run: |
