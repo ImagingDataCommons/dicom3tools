@@ -1,10 +1,19 @@
+
+260927:	libsrc/standard/condn.tpl: Correct condition on SurfaceProcessing = YES (000653)
+
+260927:	libsrc/standard/elmdict/other.tpl: Add Slicer Albula private data elements with VR encountered
+
+260927:	libsrc/standard/condn.tpl: Do not report absent PatientOrientation if Labelmap SEG with appropriate attributes (000652)
+
+260912:	libsrc/standard/elmdict/other.tpl: Add data element for Dose Calculation Model Name (CP 2590)
+
 260901:	libsrc/src/locale/mesgtext.tpl,appsrc/dcfile/dciodvfy.cc: Check for UIDs that use ISO and ITU-T roots are valid range (000651)
 
 260901:	appsrc/dcfile/dciodvfy.cc: Correct check for instance UIDs that use NEMA root but are not standard well-known instances (000620)
 
 260822:	appsrc/dcfile/dcinfo.cc: Describe dimension information (000650)
 
-260816:	libsrc/standard/condn.tpl,,strval/base.tpl: Check recently added values of LossyImageCompressionMethod against current TransferSyntaxUID (000649)
+260816:	libsrc/standard/condn.tpl,strval/base.tpl: Check recently added values of LossyImageCompressionMethod against current TransferSyntaxUID (000649)
 
 260816:	libsrc/dctool/condn.cc,standard/condn.tpl,support/condn.awk: Check last rather than any value of LossyImageCompressionMethod against current TransferSyntaxUID since may have been multiple compression cycles (000648)
 

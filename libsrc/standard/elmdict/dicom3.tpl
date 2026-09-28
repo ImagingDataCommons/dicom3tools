@@ -3842,6 +3842,7 @@
 (3004,0070) VERS="3"	VR="DS"   VM="1"	Keyword="DVHMinimumDose"			Name="DVH Minimum Dose"
 (3004,0072) VERS="3"	VR="DS"   VM="1"	Keyword="DVHMaximumDose"			Name="DVH Maximum Dose"
 (3004,0074) VERS="3"	VR="DS"   VM="1"	Keyword="DVHMeanDose"				Name="DVH Mean Dose"
+(3004,007F) VERS="3"	VR="LO"   VM="1"	Keyword="DoseCalculationModelName"				Name="Dose Calculation Model Name"
 (3004,0080) VERS="3"	VR="SQ"   VM="1"	Keyword="DoseCalculationModelSequence"			Name="Dose Calculation Model Sequence"
 (3004,0081) VERS="3"	VR="SQ"   VM="1"	Keyword="DoseCalculationAlgorithmSequence"		Name="Dose Calculation Algorithm Sequence"
 (3004,0082) VERS="3"	VR="CS"   VM="1"	Keyword="CommissioningStatus"					Name="Commissioning Status"

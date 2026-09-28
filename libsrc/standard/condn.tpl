@@ -1031,9 +1031,16 @@ Condition="PatientOrientationRequired"
 	# not required for RT dose, since either needed for grid (image) or not an image hence not applicable
 	Element="SOPClassUID"			Operator="And" Modifier="Not" StringConstantFromRootAttribute="RTDoseStorageSOPClassUID"
 	Element="SOPClassUID"			Operator="And" Modifier="Not" StringConstantFromRootAttribute="VLWholeSlideMicroscopyImageStorageSOPClassUID"
-	Element="SOPClassUID"			Operator="And" Modifier="Not" StringConstantFromRootAttribute="SegmentationStorageSOPClassUID"
 	(
 		Element="SOPClassUID"				StringConstantFromRootAttribute="SegmentationStorageSOPClassUID"
+		(
+			Element="PlaneOrientationSequence"					ElementPresentInPathFromRoot="SharedFunctionalGroupsSequence"
+			Element="PlaneOrientationSequence"	Operator="Or"	ElementPresentInPathFromRootFirstItem="PerFrameFunctionalGroupsSequence"
+			Element="ImageOrientationSlide"		Operator="Or"	ElementPresentInRoot=""
+		) Operator="And"
+	) Operator="And" Modifier="Not"
+	(
+		Element="SOPClassUID"				StringConstantFromRootAttribute="LabelMapSegmentationStorageSOPClassUID"
 		(
 			Element="PlaneOrientationSequence"					ElementPresentInPathFromRoot="SharedFunctionalGroupsSequence"
 			Element="PlaneOrientationSequence"	Operator="Or"	ElementPresentInPathFromRootFirstItem="PerFrameFunctionalGroupsSequence"
@@ -6851,17 +6858,17 @@ ConditionEnd
 
 Condition="FieldOfViewDimensionsInFloatPresentAndFieldOfViewShapeIsRectangle"
 	Element="FieldOfViewDimensionsInFloat"	ElementPresent=""
-	Element="FieldOfViewShape"				Operator="And"	StringValue="StringValue="YES"
+	Element="FieldOfViewShape"				Operator="And"	StringValue="YES"
 ConditionEnd
 
 Condition="FieldOfViewDimensionsInFloatPresentAndFieldOfViewShapeIsRound"
 	Element="FieldOfViewDimensionsInFloat"	ElementPresent=""
-	Element="FieldOfViewShape"				Operator="And"	StringValue="StringValue="ROUND"
+	Element="FieldOfViewShape"				Operator="And"	StringValue="ROUND"
 ConditionEnd
 
 Condition="FieldOfViewDimensionsInFloatPresentAndFieldOfViewShapeIsHexagon"
 	Element="FieldOfViewDimensionsInFloat"	ElementPresent=""
-	Element="FieldOfViewShape"				Operator="And"	StringValue="StringValue="HEXAGONAL"
+	Element="FieldOfViewShape"				Operator="And"	StringValue="HEXAGONAL"
 ConditionEnd
 
 Condition="NeedModuleBreastTomosynthesisContributingSources"
@@ -6873,7 +6880,7 @@ Condition="NeedModuleBreastTomosynthesisAcquisition"
 ConditionEnd
 
 Condition="SurfaceProcessingIsYes"
-	Element="SurfaceProcessing"				StringValue="StringValue="YES"
+	Element="SurfaceProcessing"				StringValue="YES"
 ConditionEnd
 
 Condition="AxisOfRotationIsPresent"
