@@ -1,3 +1,10 @@
+261125:	appsrc/dcfile/dciodvfy.cc: Check MBSA entries in LongPrimitivePointIndexList against number of points, not number of scalar values in PointCoordinatesData or DoublePointCoordinatesData (000654) (draft CP 2683)
+
+261115:	libsrc/standard/elmdict/dicom3.tpl,diconde.tpl: Correction of VM for Inconsistent Data Elements (CP 2559)
+
+261115:	libsrc/standard/elmdict/dicom3.tpl,module/base.tpl: Add Total Number of Frames in Concatenation (CP 2540)
+
+261002:	libsrc/standard/elmdict/other.tpl: Add Hologic Feature Values JSON private data elements with VR encountered
 
 260927:	libsrc/standard/condn.tpl: Correct condition on SurfaceProcessing = YES (000653)
 

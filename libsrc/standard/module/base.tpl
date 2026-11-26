@@ -1497,6 +1497,7 @@ Module="MultiFrameFunctionalGroupsCommon"
 	Name="InConcatenationNumber"				Type="1C"	Condition="ConcatenationUIDIsPresent"
 	Name="InConcatenationTotalNumber"			Type="3"
 	Verify="InConcatenationTotalNumber"						Condition="InConcatenationTotalNumberIsLessThanOrEqualToOne"	ThenErrorMessage="Cannot be less than or equal to one since then not a Concatenation"
+	Name="TotalNumberOfFramesInConcatenation"	Type="3"	NotZeroError=""
 ModuleEnd
 
 DefineMacro="PixelMeasuresMacro" InformationEntity="FunctionalGroup"

@@ -306,6 +306,7 @@
 	<DataElementIE><Name>RepresentativeFrameNumber</Name><IE>INSTANCE</IE></DataElementIE>
 	<DataElementIE><Name>SOPInstanceUIDOfConcatenationSource</Name><IE>INSTANCE</IE></DataElementIE>
 	<DataElementIE><Name>InConcatenationNumber</Name><IE>INSTANCE</IE></DataElementIE>
+	<DataElementIE><Name>TotalNumberOfFramesInConcatenation</Name><IE>INSTANCE</IE></DataElementIE>
 	<DataElementIE><Name>DimensionOrganizationSequence</Name><IE>INSTANCE</IE></DataElementIE>
 	<DataElementIE><Name>DimensionOrganizationType</Name><IE>INSTANCE</IE></DataElementIE>
 	<DataElementIE><Name>DimensionIndexSequence</Name><IE>INSTANCE</IE></DataElementIE>
