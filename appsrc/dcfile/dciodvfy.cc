@@ -2805,11 +2805,13 @@ checkAnnotationGroupSequenceItemIsInternallyConsistent(AttributeList &list,bool 
 					if (aPointCoordinatesData) {
 						// do not use getVM() since that is always 1 for OX VRs
 						Uint32 vlPointCoordinatesData = aPointCoordinatesData->getVL();
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): vlPointCoordinatesData = " << vlPointCoordinatesData << endl;
 						numberOfPointCoordinatesDataEntries = vlPointCoordinatesData / aPointCoordinatesData->getValueSize(); // OF VR so 32 bit values
 					}
 					else if (aDoublePointCoordinatesData) {
 						// do not use getVM() since that is always 1 for OX VRs
 						Uint32 vlDoublePointCoordinatesData = aDoublePointCoordinatesData->getVL();
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): vlDoublePointCoordinatesData = " << vlDoublePointCoordinatesData << endl;
 						numberOfPointCoordinatesDataEntries = vlDoublePointCoordinatesData / aDoublePointCoordinatesData->getValueSize(); // OD VR so 64 bit values
 					}
 //cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): numberOfPointCoordinatesDataEntries = " << numberOfPointCoordinatesDataEntries << endl;
@@ -2878,97 +2880,99 @@ checkAnnotationGroupSequenceItemIsInternallyConsistent(AttributeList &list,bool 
 									success = false;
 								}
 							}
-						}
-					}
-
-					if (aLongPrimitivePointIndexList) {
-						// do not use getVM() since that is always 1 for OX VRs
-						//Uint32 vmLongPrimitivePointIndexList = aLongPrimitivePointIndexList->getVM();
-						Uint32 vlLongPrimitivePointIndexList = aLongPrimitivePointIndexList->getVL();
-	//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): LongPrimitivePointIndexList VL = " << vlLongPrimitivePointIndexList << endl;
-						Uint32 nValuesInLongPrimitivePointIndexList = vlLongPrimitivePointIndexList / aLongPrimitivePointIndexList->getValueSize(); // OL VR so 32 bit values
-	//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): LongPrimitivePointIndexList number of values = " << nValuesInLongPrimitivePointIndexList << endl;
-						if (vNumberOfAnnotations != nValuesInLongPrimitivePointIndexList) {
-							if (newformat) {
-								log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListNumberOfValuesDoesNotMatchNumberOfAnnotations),aLongPrimitivePointIndexList)
-									<< " NumberOfAnnotations = <" << vNumberOfAnnotations << ">"
-									<< " number of values in LongPrimitivePointIndexList = <" << nValuesInLongPrimitivePointIndexList << ">"
-									<< endl;
-							}
-							else {
-								log << EMsgDC(LongPrimitivePointIndexListNumberOfValuesDoesNotMatchNumberOfAnnotations)
-									<< " NumberOfAnnotations = " << vNumberOfAnnotations
-									<< " number of values in LongPrimitivePointIndexList = " << nValuesInLongPrimitivePointIndexList
-									<< endl;
-							}
-							success = false;
-						}
-						// check all values in LongPrimitivePointIndexList are within the PointCoordinatesData array
-						{
-							if (!aLongPrimitivePointIndexList->isLargeAttributeLeftOnDisk()) {
-								const Uint32 *vLongPrimitivePointIndexList;
-								(void)aLongPrimitivePointIndexList->getValue(vLongPrimitivePointIndexList,nValuesInLongPrimitivePointIndexList);
-								if (nValuesInLongPrimitivePointIndexList > 0) {
-									Uint32 vLongPrimitivePointIndex = vLongPrimitivePointIndexList[0];
-									if (vLongPrimitivePointIndex != 1) {
-										if (newformat) {
-											log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListFirstValueNotOne),aLongPrimitivePointIndexList)
-												<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
-												<< endl;
+							// we could check some aspects of LongPrimitivePointIndexList even without GraphicType and AnnotationCoordinateType present
+							// but should not occur and we need AnnotationCoordinateType to determine sizeOfCoordinateTuple
+							// for check against numberOfPointCoordinatesTuples rather than numberOfPointCoordinatesDataEntries (000654)
+							if (aLongPrimitivePointIndexList) {
+								// do not use getVM() since that is always 1 for OX VRs
+								//Uint32 vmLongPrimitivePointIndexList = aLongPrimitivePointIndexList->getVM();
+								Uint32 vlLongPrimitivePointIndexList = aLongPrimitivePointIndexList->getVL();
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): LongPrimitivePointIndexList VL = " << vlLongPrimitivePointIndexList << endl;
+								Uint32 nValuesInLongPrimitivePointIndexList = vlLongPrimitivePointIndexList / aLongPrimitivePointIndexList->getValueSize(); // OL VR so 32 bit values
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): LongPrimitivePointIndexList number of values = " << nValuesInLongPrimitivePointIndexList << endl;
+								if (vNumberOfAnnotations != nValuesInLongPrimitivePointIndexList) {
+									if (newformat) {
+										log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListNumberOfValuesDoesNotMatchNumberOfAnnotations),aLongPrimitivePointIndexList)
+											<< " NumberOfAnnotations = <" << vNumberOfAnnotations << ">"
+											<< " number of values in LongPrimitivePointIndexList = <" << nValuesInLongPrimitivePointIndexList << ">"
+											<< endl;
+									}
+									else {
+										log << EMsgDC(LongPrimitivePointIndexListNumberOfValuesDoesNotMatchNumberOfAnnotations)
+											<< " NumberOfAnnotations = " << vNumberOfAnnotations
+											<< " number of values in LongPrimitivePointIndexList = " << nValuesInLongPrimitivePointIndexList
+											<< endl;
+									}
+									success = false;
+								}
+								// check all values in LongPrimitivePointIndexList are within the PointCoordinatesData array
+								{
+									if (!aLongPrimitivePointIndexList->isLargeAttributeLeftOnDisk()) {
+										const Uint32 *vLongPrimitivePointIndexList;
+										(void)aLongPrimitivePointIndexList->getValue(vLongPrimitivePointIndexList,nValuesInLongPrimitivePointIndexList);
+										if (nValuesInLongPrimitivePointIndexList > 0) {
+											Uint32 vLongPrimitivePointIndex = vLongPrimitivePointIndexList[0];
+											if (vLongPrimitivePointIndex != 1) {
+												if (newformat) {
+													log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListFirstValueNotOne),aLongPrimitivePointIndexList)
+														<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
+														<< endl;
+												}
+												else {
+													log << EMsgDC(LongPrimitivePointIndexListFirstValueNotOne)
+														<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
+														<< endl;
+												}
+												success = false;
+											}
 										}
-										else {
-											log << EMsgDC(LongPrimitivePointIndexListFirstValueNotOne)
-												<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
-												<< endl;
+										Uint32 lastLongPrimitivePointIndex = 0;
+										for (int i=0; i<nValuesInLongPrimitivePointIndexList; ++i) {
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): checking LongPrimitivePointIndexList value  " << i << endl;
+											Uint32 vLongPrimitivePointIndex = vLongPrimitivePointIndexList[i];
+											//Uint32 vLongPrimitivePointIndex = 0;	// harmless in case getValue() fails e.g., if OtherLonglargeAttribute left on disk rather than OtherLongSmallAttribute
+											//(void)aLongPrimitivePointIndexList->getValue(i,vLongPrimitivePointIndex);	// fetching individual vaalues does not work :( - need to fetch entire array 1st
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): vLongPrimitivePointIndex [" << i << "] = " << vLongPrimitivePointIndex << endl;
+											if (vLongPrimitivePointIndex >= numberOfPointCoordinatesTuples) {	// (000654)
+												if (newformat) {
+													log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListValueNotWithinPointCoordinatesData),aLongPrimitivePointIndexList)
+														<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
+														<< " number of points in PointCoordinatesData or DoublePointCoordinatesData = <" << numberOfPointCoordinatesTuples << ">"
+														<< endl;
+												}
+												else {
+													log << EMsgDC(LongPrimitivePointIndexListValueNotWithinPointCoordinatesData)
+														<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
+														<< " number of points in PointCoordinatesData or DoublePointCoordinatesData = " << numberOfPointCoordinatesTuples
+														<< endl;
+												}
+												success = false;
+											}
+											if (vLongPrimitivePointIndex <= lastLongPrimitivePointIndex) {
+												if (newformat) {
+													log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListValueNotAscending),aLongPrimitivePointIndexList)
+														<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
+														<< " not greater than <" << lastLongPrimitivePointIndex << ">"
+														<< endl;
+												}
+												else {
+													log << EMsgDC(LongPrimitivePointIndexListValueNotAscending)
+														<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
+														<< " not greater than " << lastLongPrimitivePointIndex
+														<< endl;
+												}
+												success = false;
+											}
+											lastLongPrimitivePointIndex = vLongPrimitivePointIndex;
+											if (!success) break;	// only want to flag first error, since might be many thousands
 										}
-										success = false;
+									}
+									else {
+//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): Cannot check aLongPrimitivePointIndexList since too large and left on disk" << endl;
+										if (verbose) log << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): Cannot check aLongPrimitivePointIndexList since too large and left on disk" << endl;
+										// trying would throw assertion failure from aLongPrimitivePointIndexList->getValue() array
 									}
 								}
-								Uint32 lastLongPrimitivePointIndex = 0;
-								for (int i=0; i<nValuesInLongPrimitivePointIndexList; ++i) {
-	//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): checking LongPrimitivePointIndexList value  " << i << endl;
-									Uint32 vLongPrimitivePointIndex = vLongPrimitivePointIndexList[i];
-									//Uint32 vLongPrimitivePointIndex = 0;	// harmless in case getValue() fails e.g., if OtherLonglargeAttribute left on disk rather than OtherLongSmallAttribute
-									//(void)aLongPrimitivePointIndexList->getValue(i,vLongPrimitivePointIndex);	// fetching individual vaalues does not work :( - need to fetch entire array 1st
-	//cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): vLongPrimitivePointIndex [" << i << "] = " << vLongPrimitivePointIndex << endl;
-									if (vLongPrimitivePointIndex >= numberOfPointCoordinatesDataEntries) {
-										if (newformat) {
-											log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListValueNotWithinPointCoordinatesData),aLongPrimitivePointIndexList)
-												<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
-												<< " number of PointCoordinatesData values = <" << numberOfPointCoordinatesDataEntries << ">"
-												<< endl;
-										}
-										else {
-											log << EMsgDC(LongPrimitivePointIndexListValueNotWithinPointCoordinatesData)
-												<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
-												<< " number of PointCoordinatesData values = " << numberOfPointCoordinatesDataEntries
-												<< endl;
-										}
-										success = false;
-									}
-									if (vLongPrimitivePointIndex <= lastLongPrimitivePointIndex) {
-										if (newformat) {
-											log << EMsgDCF(MMsgDC(LongPrimitivePointIndexListValueNotAscending),aLongPrimitivePointIndexList)
-												<< " LongPrimitivePointIndex entry = <" << vLongPrimitivePointIndex << ">"
-												<< " not greater than <" << lastLongPrimitivePointIndex << ">"
-												<< endl;
-										}
-										else {
-											log << EMsgDC(LongPrimitivePointIndexListValueNotAscending)
-												<< " LongPrimitivePointIndex entry = " << vLongPrimitivePointIndex
-												<< " not greater than " << lastLongPrimitivePointIndex
-												<< endl;
-										}
-										success = false;
-									}
-									lastLongPrimitivePointIndex = vLongPrimitivePointIndex;
-									if (!success) break;	// only want to flag first error, since might be many thousands
-								}
-							}
-							else {
-	cerr << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): Cannot check aLongPrimitivePointIndexList since too large and left on disk" << endl;
-								if (verbose) log << "checkAnnotationGroupSequenceItemIsInternallyConsistent(): Cannot check aLongPrimitivePointIndexList since too large and left on disk" << endl;
-								// trying would throw assertion failure from aLongPrimitivePointIndexList->getValue() array
 							}
 						}
 					}
